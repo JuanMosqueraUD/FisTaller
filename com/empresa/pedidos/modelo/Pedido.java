@@ -12,7 +12,7 @@ public class Pedido {
 
     public Pedido(Cliente cliente, String direccionEnvio, Date fecha) {
         this.cliente = cliente;
-        this.direccionEnvio = direccionEnvio;
+        this.direccionEnvio = cliente.getDireccionEnvio();
         this.fecha = fecha;
         this.detalles = new ArrayList<>();
     }
