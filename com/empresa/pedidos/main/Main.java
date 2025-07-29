@@ -2,7 +2,9 @@ package com.empresa.pedidos.main;
 
 import com.empresa.pedidos.modelo.*;
 import com.empresa.pedidos.controlador.*;
+import com.empresa.pedidos.vista.VentanaPrincipal;
 
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Date;
@@ -13,51 +15,64 @@ public class Main {
     private static int contadorClientes = 1;
     public static void main(String[] args) {
 
-        ControladorPedido ctrl = new ControladorPedido();
+        SwingUtilities.invokeLater(() -> {
+            VentanaPrincipal ventana = new VentanaPrincipal();
+            ventana.setVisible(true);
+        });
 
+        GestorStockPlanta gestor = new GestorStockPlanta();
+        ControladorPedido ctrl = new ControladorPedido(gestor);
         // Demostración del sistema de gestión automática de clientes
-        System.out.println("\n=== Sistema de Gestión de pedidos ===");
+        System.out.println("\n=== Sistema de Gestión de pedidos - Rappi===");
 
         // Crear varios clientes automáticamente
-        crearCliente("María García", "Avenida 456", 500000, 1500000, 15);
+        crearCliente("Alma Marla Gozo", "Avenida 69", 500000, 1500000, 15);
+        Planta planta1 = new Planta("Planta Norte");
+        Planta planta2 = new Planta("Planta Sur");
         Articulo a1 = new Articulo("A001", "Mouse", "Mouse óptico", 50.0);
         Articulo a2 = new Articulo("A002", "Teclado", "Teclado mecánico", 100.0);
-
+        gestor.registrarStock(a1, planta1, 200, 50);
+        gestor.registrarStock(a1, planta2, 100, 30);
+        gestor.registrarStock(a2, planta1, 150, 40);
         // Listar todos los clientes
-        listarClientes();
 
-        // Buscar un cliente específico
 
-        System.out.println("\n=== Búsqueda de Cliente ===");
-        Cliente clienteEncontrado = buscarCliente("C001");
-        if (clienteEncontrado != null) {
-            System.out.println("Cliente encontrado: " + clienteEncontrado.getNombre());
+        for (StockPlanta sp : gestor.listarStock()) {
+            System.out.println("Artículo: " + sp.getArticulo().getNombre() +
+                               " | Planta: " + sp.getPlanta().getNombre() +
+                               " | Stock: " + sp.getCantidadExistente());
         }
 
-        // Actualizar información de un cliente
-        System.out.println("\n=== Actualización de Cliente ===");
-        actualizarCliente("C001", "Pedro López Martínez", "Nueva Carrera 999");
-        
-        // Mostrar lista actualizada
-        listarClientes();
+
 
         Pedido pedido = ctrl.crearPedido(buscarCliente("C001"), new Date());
         int idPedido = pedido.getIdPedido();
+        boolean agregado1 = ctrl.agregarDetalleAPedido(idPedido, a1, 5);  // Mouse
+        boolean agregado2 = ctrl.agregarDetalleAPedido(idPedido, a2, 3);  // Teclado
 
-        ctrl.agregarDetalleAPedido(idPedido, a1, 3);
-        ctrl.agregarDetalleAPedido(idPedido, a2, 2);
+        System.out.println("Pedido #" + idPedido + " creado para " + buscarCliente("C001").getNombre());
+        if (agregado1) {
+            System.out.println("Artículo A001 agregado exitosamente.");
+        }
+        if (agregado2) {
+            System.out.println("Artículo A002 agregado exitosamente.");
+        }
 
-        // Mostrar detalles
-        System.out.println("Pedido #" + pedido.getIdPedido() + " - Cliente: " + pedido.getCliente().getNombre());
-
+        // Mostrar resumen del pedido
+        System.out.println("\nDetalles del pedido:");
         for (DetallePedido d : pedido.getDetalles()) {
-            System.out.println("- Artículo: " + d.getArticulo().getNombre() +
-                    ", Cantidad: " + d.getCantidad() +
-                    ", Precio Unitario: $" + d.getArticulo().getPrecio());
+            System.out.println("- " + d.getArticulo().getNombre() + " x" + d.getCantidad());
+        }
 
-
+        // Ver stock actualizado
+        System.out.println("\nStock actualizado:");
+        for (StockPlanta sp : gestor.listarStock()) {
+            System.out.println("Artículo: " + sp.getArticulo().getNombre() +
+                               ", Planta: " + sp.getPlanta().getNombre() +
+                               ", Cantidad: " + sp.getCantidadExistente());
         }
     }
+
 
     // Método para crear cliente con código automático
     public static void crearCliente(String nombre, String direccion, int saldo, int limite, double descuento){
@@ -65,7 +80,7 @@ public class Main {
         Cliente nuevoCliente = new Cliente(codigoAutomatico, nombre, direccion, saldo, limite, descuento);
         clientes.put(codigoAutomatico, nuevoCliente);
         contadorClientes++;
-        System.out.println("Cliente creado: " + nuevoCliente.getNombre() + " con código: " + codigoAutomatico);
+        System.out.println("Cliente creado: " + nuevoCliente.getNombre() + " con cóck-digo: " + codigoAutomatico);
     }
     
     // Método para buscar cliente por código

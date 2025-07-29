@@ -18,4 +18,10 @@ public class StockPlanta {
     public Planta getPlanta() { return planta; }
     public int getCantidadExistente() { return cantidadExistente; }
     public int getStockMinimo() { return stockMinimo; }
+
+    public void descontarStock(int cantidad) {
+    if (cantidad <= cantidadExistente) {
+        cantidadExistente -= cantidad;
+    }
+}
 }
