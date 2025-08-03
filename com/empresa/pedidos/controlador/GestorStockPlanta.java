@@ -77,4 +77,32 @@ public class GestorStockPlanta {
         }
         return false;
     }
+
+    // Nuevo método para detectar stock bajo el mínimo
+    public List<StockPlanta> obtenerStockBajoMinimo() {
+        List<StockPlanta> stockBajo = new ArrayList<>();
+        for (StockPlanta sp : listaStock) {
+            if (sp.getCantidadExistente() <= sp.getStockMinimo()) {
+                stockBajo.add(sp);
+            }
+        }
+        return stockBajo;
+    }
+
+    // Método para obtener stock bajo mínimo de una planta específica
+    public List<StockPlanta> obtenerStockBajoMinimoPorPlanta(Planta planta) {
+        List<StockPlanta> stockBajo = new ArrayList<>();
+        for (StockPlanta sp : listaStock) {
+            if (sp.getPlanta().equals(planta) && sp.getCantidadExistente() <= sp.getStockMinimo()) {
+                stockBajo.add(sp);
+            }
+        }
+        return stockBajo;
+    }
+
+    // Método para verificar si un artículo específico está bajo stock mínimo
+    public boolean esStockBajoMinimo(Articulo articulo, Planta planta) {
+        StockPlanta stock = buscarStock(articulo, planta);
+        return stock != null && stock.getCantidadExistente() <= stock.getStockMinimo();
+    }
 }

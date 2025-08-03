@@ -14,6 +14,7 @@ public class Pedido {
     private List<DetallePedido> detalles;
 
     public Pedido(Cliente cliente, Date fecha) {
+        this.idPedido = contador++;
         this.cliente = cliente;
         this.direccionEnvio = cliente.getDireccionEnvio();
         this.fecha = fecha;

@@ -20,8 +20,21 @@ public class StockPlanta {
     public int getStockMinimo() { return stockMinimo; }
 
     public void descontarStock(int cantidad) {
-    if (cantidad <= cantidadExistente) {
-        cantidadExistente -= cantidad;
+        if (cantidad <= cantidadExistente) {
+            cantidadExistente -= cantidad;
+        }
     }
-}
+
+    // Métodos para actualizar stock directamente
+    public void setCantidadExistente(int cantidadExistente) {
+        this.cantidadExistente = cantidadExistente;
+    }
+
+    public void setStockMinimo(int stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
+    public void agregarStock(int cantidad) {
+        this.cantidadExistente += cantidad;
+    }
 }
